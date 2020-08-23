@@ -1,0 +1,17 @@
+{% extends 'ngapp/home.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4" style="color: black;">Rate a car</legend>
+        {{car.mark}}
+        {{car.model}}
+        
+        {{form|crispy}}
+    </legend>
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Find</button>
+    </div>
+  </form>
+{% endblock %}

@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from bs4 import BeautifulSoup
 import requests
 import json
-from . forms import NewCarForm
-from . models import Car
+from . forms import NewCarForm, NewRateForm
+from . models import Car, Rate
 from bs4 import BeautifulSoup
+from django.contrib import messages
 import requests
 import json
 
@@ -15,8 +16,9 @@ import json
 
 def index(request):
     form = NewCarForm(request.POST or None)
-    dane = Car.objects.all()
     status = False
+    object_first = Car.objects.first()
+    dane = []
     if form.is_valid():
         mark = form.cleaned_data['mark']
         usermodel = form.cleaned_data['model']
@@ -29,9 +31,7 @@ def index(request):
                 print(model['Model_Name'])
                 print(usermodel)
                 status = True
-                dane.append(mark)
-                dane.append(usermodel)
-                Car = form.save()
+                Car1 = form.save()
             else:
                 print(model['Model_Name'])
                 print(usermodel)
@@ -43,6 +43,27 @@ def index(request):
         form = NewCarForm()
     stuff_for_frontend = { 
         'form' : form ,
-        'dane' : dane, }
+        'dane' : Car.objects.all(),
+         }
         
-    return render(request,'ngapp/home.html',stuff_for_frontend)
+    return render(request, 'ngapp/home.html',stuff_for_frontend)
+
+def rate(request,pk):
+    car = get_object_or_404(Car,pk=pk)
+    cars = Car.objects.all().count()
+    print(cars)
+    form = NewRateForm(request.POST or None)
+    if form.is_valid():
+        rate = request.POST.get('grade')
+        rating = Rate.objects.create(grade=rate, car=car)
+        rating.save()
+        return HttpResponse('Thanks for voting')
+    else : 
+        form = NewRateForm()
+
+    stuff_for_frontend = {
+        'car' : car,
+        'form' : form,
+    }
+    
+    return render(request, 'ngapp/rate.html', stuff_for_frontend)
