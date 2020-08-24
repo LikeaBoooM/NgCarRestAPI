@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.urls import reverse
 # Create your models here.
 
 class Car(models.Model):
@@ -7,8 +7,10 @@ class Car(models.Model):
     model = models.CharField(max_length=180, unique=True)
 
     def __str__(self):
-        return "Car mark : {} Car model {}".format(self.id,self.model)
+        return "Car mark : {} Car model {}".format(self.mark,self.model)
     
+    def get_absolute_url(self):
+        return reverse('index')
 
 class Rate(models.Model):
     class Ratings(models.IntegerChoices):
@@ -20,3 +22,6 @@ class Rate(models.Model):
     
     grade = models.IntegerField(choices=Ratings.choices)
     car = models.ForeignKey(Car, on_delete=models.CASCADE,blank=True, null=True, related_name='rates')
+
+    def __str__(self):
+        return self.grade

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404,HttpResponseRedirect,redirect
 from django.http import HttpResponse
 from bs4 import BeautifulSoup
 import requests
@@ -17,33 +17,32 @@ from django.db.models import Avg, Count
 # Create your views here.
 
 def index(request):
-    form = NewCarForm(request.POST or None)
-    status = False
-    object_first = Car.objects.first()
+    cars = []
     avg = Car.objects.annotate(avg_rate=Avg('rates__grade')).values()
-    print(avg)
-    if form.is_valid():
-        mark = form.cleaned_data['mark']
-        usermodel = form.cleaned_data['model']
-        BASE_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/{}?format=json".format(mark)
-        response = requests.get(BASE_URL)
-        data_cars = response.text
-        data =json.loads(data_cars)
-        for model in data['Results']:
-            if model['Model_Name'].lower() == usermodel.lower():
-                print(model['Model_Name'])
-                print(usermodel)
-                status = True
-                Car1 = form.save()
-            else:
-                print(model['Model_Name'])
-                print(usermodel)
-        if status is True :
-            return HttpResponse('Jest takie auto')
-        else :
-            return HttpResponse('Nie ma takiego auta')
+    if request.method == 'POST' :
+        form = NewCarForm(request.POST or None)
+        if form.is_valid():
+            mark = form.cleaned_data['mark']
+            usermodel = form.cleaned_data['model']
+            BASE_URL = "https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/{}?format=json".format(mark)
+            response = requests.get(BASE_URL)
+            data_cars = response.text
+            data =json.loads(data_cars)
+            
+            for model in data['Results']:
+                if model['Model_Name'].lower() == usermodel.lower():
+                    car_to_add = form.save(commit=False)
+                    messages.success(request, 'Car has been added to our data base')
+                    car_to_add.save()
+                    cars.append(car_to_add)
+                    form = NewCarForm() 
+                else:
+                    pass
+            if cars.__len__() == 0 :
+                messages.success(request, 'We cant find car like that ')                                   
     else :
-        form = NewCarForm()
+        form = NewCarForm() 
+
     stuff_for_frontend = { 
         'form' : form ,
         'avg' : avg,
@@ -59,7 +58,7 @@ def rate(request,pk):
         rate = request.POST.get('grade')
         rating = Rate.objects.create(grade=rate, car=car)
         rating.save()
-        return HttpResponse('Thanks for voting')
+        return redirect('index')
     else : 
         form = NewRateForm()
 
@@ -75,3 +74,4 @@ def popular(request):
     print(number_of_rates)
 
     return render(request,'ngapp/popular.html',{'number_of_rates' : number_of_rates})
+

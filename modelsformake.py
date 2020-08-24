@@ -27,7 +27,7 @@ def checkModelifExists1(model1):
         else:
             print(False)
 
-checkModelifExists1('GOLF IIIa')
+checkModelifExists1('GOLF III')
 
 
 
