@@ -11,6 +11,7 @@ requests = "*"
 django = "==3.0.5"
 django-crispy-forms = "*"
 gunicorn = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
