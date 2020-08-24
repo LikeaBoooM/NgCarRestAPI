@@ -12,3 +12,4 @@ pylint-plugin-utils==0.6
 requests==2.21.0
 virtualenv==20.0.31
 virtualenv-clone==0.5.4
+beautifulsoup4==4.8.2

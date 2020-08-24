@@ -1,11 +1,9 @@
 from django.shortcuts import render, get_object_or_404,HttpResponseRedirect,redirect
 from django.http import HttpResponse
-from bs4 import BeautifulSoup
 import requests
 import json
 from . forms import NewCarForm, NewRateForm
 from . models import Car, Rate
-from bs4 import BeautifulSoup
 from django.contrib import messages
 import requests
 import json
