@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 from django.contrib import messages
 import requests
 import json
+from django.db.models import Avg, Count
+
 
 
 
@@ -18,7 +20,8 @@ def index(request):
     form = NewCarForm(request.POST or None)
     status = False
     object_first = Car.objects.first()
-    dane = []
+    avg = Car.objects.annotate(avg_rate=Avg('rates__grade')).values()
+    print(avg)
     if form.is_valid():
         mark = form.cleaned_data['mark']
         usermodel = form.cleaned_data['model']
@@ -43,7 +46,7 @@ def index(request):
         form = NewCarForm()
     stuff_for_frontend = { 
         'form' : form ,
-        'dane' : Car.objects.all(),
+        'avg' : avg,
          }
         
     return render(request, 'ngapp/home.html',stuff_for_frontend)
@@ -51,7 +54,6 @@ def index(request):
 def rate(request,pk):
     car = get_object_or_404(Car,pk=pk)
     cars = Car.objects.all().count()
-    print(cars)
     form = NewRateForm(request.POST or None)
     if form.is_valid():
         rate = request.POST.get('grade')
@@ -67,3 +69,9 @@ def rate(request,pk):
     }
     
     return render(request, 'ngapp/rate.html', stuff_for_frontend)
+
+def popular(request):
+    number_of_rates = Car.objects.annotate(rate_count=Count('rates')).values()
+    print(number_of_rates)
+
+    return render(request,'ngapp/popular.html',{'number_of_rates' : number_of_rates})
