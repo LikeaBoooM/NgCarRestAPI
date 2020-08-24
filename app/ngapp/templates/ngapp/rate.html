@@ -5,12 +5,12 @@
     {% csrf_token %}
     <fieldset class="form-group">
         <legend class="border-bottom mb-4" style="color: black;">Rate a car</legend>
-        {{car.mark}}
-        {{car.model}}
+        <h1>{{car.mark}}
+        {{car.model}}</h1>
         {{form|crispy}}
     </legend>
     <div class="form-group">
-        <button class="btn btn-outline-info" type="submit">Find</button>
+        <button class="btn btn-outline-info" type="submit">Vote</button>
     </div>
   </form>
 {% endblock %}

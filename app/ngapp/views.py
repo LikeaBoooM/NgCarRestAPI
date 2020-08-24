@@ -18,7 +18,7 @@ from django.db.models import Avg, Count
 
 def index(request):
     cars = []
-    avg = Car.objects.annotate(avg_rate=Avg('rates__grade')).values()
+    avg = Car.objects.annotate(avg_rate=Avg('rates__grade')).values().order_by('-id')
     if request.method == 'POST' :
         form = NewCarForm(request.POST or None)
         if form.is_valid():
@@ -39,7 +39,7 @@ def index(request):
                 else:
                     pass
             if cars.__len__() == 0 :
-                messages.success(request, 'We cant find car like that ')                                   
+                messages.warning(request, 'We cant find car like that ')                                   
     else :
         form = NewCarForm() 
 
@@ -70,8 +70,7 @@ def rate(request,pk):
     return render(request, 'ngapp/rate.html', stuff_for_frontend)
 
 def popular(request):
-    number_of_rates = Car.objects.annotate(rate_count=Count('rates')).values()
-    print(number_of_rates)
+    number_of_rates = Car.objects.annotate(rate_count=Count('rates')).values().order_by('-id')
 
     return render(request,'ngapp/popular.html',{'number_of_rates' : number_of_rates})
 
