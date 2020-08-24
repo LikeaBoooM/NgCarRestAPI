@@ -1,1 +1,1 @@
-web : gunicorn ng.wsgi
+web : gunicorn NG.wsgi
