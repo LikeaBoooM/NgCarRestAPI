@@ -25,7 +25,7 @@ SECRET_KEY = '+tb!q0(bc^1l96ox54t-5=@7oix&otlbg(3#=ou)n!poj0&xac'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['checkmodelofyourcar.herokuapp.com']
+ALLOWED_HOSTS = ['checkmodelofyourcar.herokuapp.com','localhost']
 
 
 # Application definition
