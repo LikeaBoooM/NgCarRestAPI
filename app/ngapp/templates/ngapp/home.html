@@ -62,8 +62,8 @@
           {% for car in avg %}
           <tr>
             <th scope="row">{{car.id}}</th>
-            <td>{{car.mark}}</td>
-            <td>{{car.model}}</td>
+            <td>{{car.mark|title}}</td>
+            <td>{{car.model|title}}</td>
             <td>{{car.avg_rate}}</td>
             <td><a href="{% url 'rates' car.id %}">Rate</a></td>
           </tr>

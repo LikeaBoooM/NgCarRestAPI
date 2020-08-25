@@ -15,8 +15,8 @@
       {% for car in number_of_rates %}
       <tr>
         <th scope="row">{{car.id}}</th>
-        <td>{{car.mark}}</td>
-        <td>{{car.model}}</td>
+        <td>{{car.mark|title}}</td>
+        <td>{{car.model|title}}</td>
         <td>{{car.rate_count}}</td>
 
       </tr>
